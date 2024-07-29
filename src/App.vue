@@ -1,47 +1,66 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+
+  import { ref } from'vue';
+
+  
+  const name =ref('Mirza Junaid');
+  const status=ref('active');
+  const tasks=ref(['Task One',' Task two', 'Task three']);
+  const newTask=ref('')
+
+  const toggleStatus=()=>{
+    if(status.value==='active') {
+      status.value='pending';
+    } else if ( status.value==='pending') {
+      status.value='inactive';
+    } else {
+      status.value='active';
+    }
+  };
+
+  const addTask=()=>{
+    if (newTask.value.trim()!=='') {
+      tasks.value.push(newTask.value);
+      newTask.value='';
+    }
+  }
+
+  const deleteTask=(index)=> {
+    tasks.value.splice(index,1);
+  }
+
 </script>
 
+
+
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <h1>{{ name }}</h1>
+  <p v-if="status==='active'">User is Active</p>
+  <p v-else-if="status==='pending'">User is pending</p>
+  <p v-else>User is InActive</p>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
 
-  <main>
-    <TheWelcome />
-  </main>
+  <form @submit.prevent="addTask">
+    <label for="newTask">Add task</label>
+    <input type="text" class="" id="newTask" nme="newTask" v-model="newTask">
+    <button type="submit">Submit</button>
+  </form>
+
+  <h3>Tasks:</h3>
+  <ul>
+    <li v-for="(task,i) in tasks" v-bind:key="task">
+
+      <span>
+        {{ task }}
+      </span>
+      <button @click="deleteTask(i)">x</button>
+    </li>
+  </ul>
+  <br/>
+  <button @click="toggleStatus">Status</button>
+  
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
